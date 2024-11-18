@@ -15,18 +15,19 @@ namespace Project_Final
             HashSet<string> Seats = new HashSet<string>();
             bool continueProgram = true;
 
-            string[] movies = {"Teeyod","Teeyod2","Teeyod3","Teeyod4","Teeyod5","Dom","Dom2","Dom3","Dom4","Dom5"};
-            string[] times = { "12:00 P.M", "15:00 P.M", "17:30 P.M", "18:00 P.M" };
+            string[] movies = { "Teeyod", "Godzilla", "Titanic", "The Godfather", "Jurassic Park", "Forrest Gump", "Interstellar", "Avengers: Endgame", "Avatar", "The Matrix" };
+            string[] times = { "12:00 P.M", "15:00 P.M", "17:30 P.M", "18:00 P.M", "19:00 P.M", "20:00 P.M", "21:00 P.M" };
+            string[] date = { "Monday 25/11/2024" , "Tuesday 26/11/2024"};
             while (continueProgram)
             {
-                Console.WriteLine("Welcome to Movie \n What movie are you watchig");
-                Console.WriteLine("Movie for Today");
+                Console.WriteLine("Welcome to Movie \n What movie are you watching?");
+                Console.WriteLine($"Movie for Today ({date[0]})");
                 for (int i = 0; i < 5; i++)
                 {
                     Console.WriteLine($"{i + 1}. {movies[i]}");
                 }
 
-                Console.WriteLine("\nMovie for Tomorrow");
+                Console.WriteLine($"\nMovie for Tomorrow ({date[1]})");
                 for (int i = 5; i < 10; i++)
                 {
                     Console.WriteLine($"{i + 1}. {movies[i]}");
@@ -39,35 +40,50 @@ namespace Project_Final
                     continue;
                 }
 
-                Console.WriteLine("\nWhat time you watch");
-                for (int i = 0; i < 4; i++)
-                {
-                    Console.WriteLine($"{i + 1}. {times[i]}");
-                }
+                string selectedDate = scheduleChoice <= 5 ? date[0] : date[1];
 
-                Console.Write("\nWhat times are you watching? : ");
-                if (!int.TryParse(Console.ReadLine(), out int scheduleChoice1) || scheduleChoice1 < 1 || scheduleChoice1 > 4)
+                int scheduleChoice1 = 0;
+                do
                 {
-                    Console.WriteLine("Invalid choice. Please try again.");
-                }
+                    Console.WriteLine("\nWhat time you watch");
+                    for (int i = 0; i < 7; i++)
+                    {
+                        Console.WriteLine($"{i + 1}. {times[i]}");
+                    }
 
-                Console.Write("\nHow many tickets do you want to buy? : ");
-                if (!int.TryParse (Console.ReadLine(), out int ticketCount) || ticketCount < 1)
-                {
-                    Console.WriteLine("Invalid ticket count. Please try again.");
-                    continue;
-                }
+                    Console.Write("\nWhat times are you watching? : ");
+                    if (!int.TryParse(Console.ReadLine(), out scheduleChoice1) || scheduleChoice1 < 1 || scheduleChoice1 > 7)
+                    {
+                        Console.WriteLine("Invalid choice. Please try again.");
+                    }
+                } while (scheduleChoice1 < 1 || scheduleChoice1 > 7);
 
-                Console.WriteLine("\nSelect Zone : ");
-                Console.WriteLine("1.Economy 120 THB");
-                Console.WriteLine("2.Regular 160 THB");
-                Console.WriteLine("3.VIP 220 THB");
-                Console.Write("\nEnter your seat zone : ");
-                if (!int.TryParse(Console.ReadLine(),out int zoneChoice) || zoneChoice < 1 || zoneChoice > 3)
+                int ticketCount = 0;
+                do
                 {
-                    Console.WriteLine("Invalid choice. Defualting to Regular");
-                    zoneChoice = 0;
-                }
+                    Console.Write("\nHow many tickets do you want to buy? : ");
+                    if (!int.TryParse(Console.ReadLine(), out ticketCount) || ticketCount < 1)
+                    {
+                        Console.WriteLine("Invalid ticket count. Please try again.");
+                        continue;
+                    }
+                } while (ticketCount <= 0);
+
+                int zoneChoice;
+                do
+                {
+                    Console.WriteLine("\nSelect Zone : ");
+                    Console.WriteLine("1. Economy 120 THB");
+                    Console.WriteLine("2. Regular 160 THB");
+                    Console.WriteLine("3. VIP 220 THB");
+                    Console.Write("\nEnter your seat zone : ");
+                    if (!int.TryParse(Console.ReadLine(), out zoneChoice) || zoneChoice < 1 || zoneChoice > 3)
+                    {
+                        Console.WriteLine("Invalid choice. Please try again.");
+                        continue;
+                    }
+                } while (zoneChoice < 1 || zoneChoice > 3);
+
 
                 int ticketPrice = 0;
                 string selectzone = "";
@@ -121,13 +137,14 @@ namespace Project_Final
                         }
                     }
 
-                    Ticket ticket = new Ticket(movies[scheduleChoice - 1], times[scheduleChoice1 - 1], ticketPrice, selectzone, seatNumbers);
+                    Ticket ticket = new Ticket(movies[scheduleChoice - 1], times[scheduleChoice1 - 1], selectedDate , ticketPrice, selectzone, seatNumbers);
                     Summarysummarize.Add(ticket);
                 }
 
                 int totalPrice = ticketCount * ticketPrice;
                 if (ticketCount > 2)
                 {
+                    Console.WriteLine($"\nTotal price: {totalPrice} THB");
                     double discount = 0.10;
                     totalPrice = (int)(totalPrice * (1 - discount));
                     Console.WriteLine($"\nYou get a 10% discount! Total price after discount: {totalPrice} THB");
@@ -152,7 +169,7 @@ namespace Project_Final
                         }
 
                         Console.WriteLine("\nGoodbye!");
-                        continueProgram = false ;
+                        continueProgram = false;
                         break;
                     }
                     else if (userResponse == "no")
@@ -178,14 +195,16 @@ namespace Project_Final
     {
         public string Movie { get; private set; }
         public string Time { get; private set; }
+        public string Date { get; private set; }
         public int Price { get; private set; }
         public string Zone { get; private set; }
         public string SeatNumber { get; private set; }
 
-        public Ticket(string movie, string time, int price, string zone, string seatNumber)
+        public Ticket(string movie, string time, string date , int price, string zone, string seatNumber)
         {
             Movie = movie;
             Time = time;
+            Date = date;
             Price = price;
             Zone = zone;
             SeatNumber = seatNumber;
@@ -193,7 +212,7 @@ namespace Project_Final
 
         public string GetSummary()
         {
-            return $"Movie: {Movie}, Time: {Time}, Price: {Price} THB, Zone: {Zone}, Seat: {SeatNumber}";
+            return $"Movie: {Movie}, Date: {Date} Time: {Time}, Price: {Price} THB, Zone: {Zone}, Seat: {SeatNumber}";
         }
     }
 }
