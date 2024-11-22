@@ -20,20 +20,20 @@ namespace Project_Final
             string[] date = { "Monday 25/11/2024" , "Tuesday 26/11/2024"};
             while (continueProgram)
             {
-                Console.WriteLine("Welcome to Movie \n What movie are you watching?");
-                Console.WriteLine($"Movie for Today ({date[0]})");
+                Console.WriteLine("Welcome to Co-Prom Cinema\nSelect the movie");
+                Console.WriteLine($"Today's movie program ({date[0]})");
                 for (int i = 0; i < 5; i++)
                 {
                     Console.WriteLine($"{i + 1}. {movies[i]}");
                 }
 
-                Console.WriteLine($"\nMovie for Tomorrow ({date[1]})");
+                Console.WriteLine($"\nTomorrow's movie program ({date[1]})");
                 for (int i = 5; i < 10; i++)
                 {
                     Console.WriteLine($"{i + 1}. {movies[i]}");
                 }
 
-                Console.Write("\nWhat number are you watching? : ");
+                Console.Write("\nWhich number movie do you select? : ");
                 if (!int.TryParse(Console.ReadLine(), out int scheduleChoice) || scheduleChoice < 1 || scheduleChoice > 10)
                 {
                     Console.WriteLine("Invalid choice. Please try again.");
@@ -45,13 +45,13 @@ namespace Project_Final
                 int scheduleChoice1 = 0;
                 do
                 {
-                    Console.WriteLine("\nWhat time you watch");
+                    Console.WriteLine("\nPlease select the time");
                     for (int i = 0; i < 7; i++)
                     {
                         Console.WriteLine($"{i + 1}. {times[i]}");
                     }
 
-                    Console.Write("\nWhat times are you watching? : ");
+                    Console.Write("\nWhat time do you choose? : ");
                     if (!int.TryParse(Console.ReadLine(), out scheduleChoice1) || scheduleChoice1 < 1 || scheduleChoice1 > 7)
                     {
                         Console.WriteLine("Invalid choice. Please try again.");
@@ -76,7 +76,7 @@ namespace Project_Final
                     Console.WriteLine("1. Economy 120 THB");
                     Console.WriteLine("2. Regular 160 THB");
                     Console.WriteLine("3. VIP 220 THB");
-                    Console.Write("\nEnter your seat zone : ");
+                    Console.Write("\nEnter seat zone you select: ");
                     if (!int.TryParse(Console.ReadLine(), out zoneChoice) || zoneChoice < 1 || zoneChoice > 3)
                     {
                         Console.WriteLine("Invalid choice. Please try again.");
