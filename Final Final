@@ -70,7 +70,8 @@ namespace Project_Final
                 {
                     return scheduleChoice <= 5 ? date[0] : date[1];
                 }
-                Console.WriteLine("Invalid choice. Please try again.");
+                Console.WriteLine("\nInvalid choice. Please try again.\n");
+                DisplayMovies(movies, date);
             }
         }
 
@@ -86,7 +87,12 @@ namespace Project_Final
                 }
 
                 Console.Write("\nWhat time do you choose? : ");
-            } while (!int.TryParse(Console.ReadLine(), out timeChoice) || timeChoice < 1 || timeChoice > times.Length);
+
+                if (!int.TryParse(Console.ReadLine(), out timeChoice) || timeChoice < 1 || timeChoice > times.Length)
+                {
+                    Console.WriteLine("\nInvalid time! please try again.");
+                }
+            } while (timeChoice < 1 || timeChoice > times.Length);
 
             return times[timeChoice - 1];
         }
@@ -97,7 +103,12 @@ namespace Project_Final
             do
             {
                 Console.Write("\nHow many tickets do you want to buy? : ");
-            } while (!int.TryParse(Console.ReadLine(), out ticketCount) || ticketCount <= 0);
+                if (!int.TryParse(Console.ReadLine(), out ticketCount) || ticketCount <= 0)
+                {
+                    Console.WriteLine("\nInvalid input! Please try again.");
+                }
+
+            } while (ticketCount <= 0);
 
             return ticketCount;
         }
@@ -117,17 +128,23 @@ namespace Project_Final
                     switch (zoneChoice)
                     {
                         case 1:
+                            Console.WriteLine("You select Economy");
+                            Console.WriteLine("TicketPrice is 120");
                             ticketPrice = 120;
                             return "Economy";
                         case 2:
+                            Console.WriteLine("You select Regular");
+                            Console.WriteLine("TicketPrice is 160");
                             ticketPrice = 160;
                             return "Regular";
                         case 3:
+                            Console.WriteLine("You select VIP");
+                            Console.WriteLine("TicketPrice is 220");
                             ticketPrice = 220;
                             return "VIP";
                     }
                 }
-                Console.WriteLine("Invalid choice. Please try again.");
+                Console.WriteLine("\nInvalid choice. Please try again.");
             }
         }
 
