@@ -213,16 +213,16 @@ namespace Project_Final
                             Console.WriteLine("You select Economy");
                             Console.WriteLine("TicketPrice is 120");
                             ticketPrice = 120;
-                            return "Economy";
+                            return "Economy"; //หากเลือก 1 ticketPrice จะถูกตั้งเป็น 120 ,method ส่งค่ากลับเป็น Economy
                         case 2:
                             Console.WriteLine("You select Regular");
                             Console.WriteLine("TicketPrice is 160");
-                            ticketPrice = 160;
+                            ticketPrice = 160; //หากเลือก 2 ticketPrice จะถูกตั้งเป็น 160 ,method ส่งค่ากลับเป็น Regular
                             return "Regular";
                         case 3:
                             Console.WriteLine("You select VIP");
                             Console.WriteLine("TicketPrice is 220");
-                            ticketPrice = 220;
+                            ticketPrice = 220; //หากเลือก 3 ticketPrice จะถูกตั้งเป็น 220 ,method ส่งค่ากลับเป็น VIP
                             return "VIP";
                     }
                 }
@@ -230,26 +230,38 @@ namespace Project_Final
             }
         }
 
-        static string GetSeatNumber(HashSet<string> Seats, int ticketNumber)
+        static string GetSeatNumber(HashSet<string> Seats, int ticketNumber) //เหมือนเดิม ที่เพิ่มมาคือ HashSet ก็คือเก็บข้อมูลที่ถูกจองแล้ว
         {
             string seatNumbers;
-            while (true)
+            while (true) // ลูปไปเรื่อยๆจนกว่าจะได้รับข้อมูลที่ถูกต้องและสามารถส่งค่ากลับได้
             {
                 Console.Write($"Enter seat number for Ticket {ticketNumber} (A1-A10, B1-B10): ");
-                seatNumbers = Console.ReadLine()?.Trim();
+                seatNumbers = Console.ReadLine()?.Trim(); //ใช้?เพื่อป้องกันerrorจากการเรียกใช้ .trim .trim คือตัดช่องว่างรอบๆข้อความที่ไม่จำเป็น
                 if (!System.Text.RegularExpressions.Regex.IsMatch(seatNumbers, @"^[A-B][1-9]$|^[A-B]10$"))
+                /*System.Text.RegularExpressions เป็น method ใน C#ที่ใช้ตรวจสอบว่า string ตรงตาม pattern ตามที่กำหนดมั้ย
+                 * Regex.IsMatch คือใช้เพื่อตรวจสอบว่าตรงตามรูปแบบที่กำหนดมั้ย
+                 * System.Text.RegularExpressions ปกติจะคืนค่า true หากข้อความตรงตามรุปแบบที่กำหนด คืนค่า false หากไม่ตรง
+                 * ! คือการกลับค่า(นิเสธ) true เป็น false และจาก false เป็น true
+                 * ^ คือตำแหน่งเริ่มต้นของข้อความ
+                 * A-B อักษร AหรือB
+                 * 1-9 เลข 1-9
+                 * $ตำแหน่งสิ้นสุดของข้อความ
+                 * | คือ or เช่น ^[A-B][1-9]$ จะตรงกับ "A1","B9" , ^[A-B]10$ จะตรงกับ "A10","B10"
+                 * ถ้าผู้ใช้ใส่คำตอบใน seatNumbers เป็น C3 ที่ไม่ตรงกับรุปแบบ System.Text.RegularExpressions จะคืนค่า false แต่ติด ! !falseจึงกลายเป็น true จะแสดงข้อความ Invalid seat number และจะรันโปรแกรมต่อ
+                 * ถ้าผู้ใช้ใส่คำตอบเป็น A5 ที่ตรงกับรูปแบบ System.Text.RegularExpressions.Regex.IsMatch จะคืนค่า true แต่ติด ! !trueจึงกลายเป็น false จะไม่แสดงข้อความและทำงานต่อ
+                 */
                 {
                     Console.WriteLine("Invalid seat number. Please choose a seat between A1-A10 or B1-B10.");
                     continue;
                 }
-                if (Seats.Contains(seatNumbers))
+                if (Seats.Contains(seatNumbers)) //ใช้ Seats.Contains เพื่อตรวจสอบว่าที่นั่งที่ป้อนมีอยู่ใน HashSet<string> Seats แล้วหรือยัง หากจองแล้วจะแสดงข้อความให้เลือกใหม่พร้อมวนลุป
                 {
                     Console.WriteLine($"Seat {seatNumbers} is already booked. Please choose another seat.");
                 }
                 else
                 {
-                    Seats.Add(seatNumbers);
-                    return seatNumbers;
+                    Seats.Add(seatNumbers); //เพิ่มเลขที่นั่งลงใน Seats ที่เป็น HashSet ที่เก็บค่าข้อมูลที่เลือกไปแล้ว เพิ่มตำแหน่งseatNumbersลงในSeats ถ้ายังไม่มีจะเพิ่มสำเร็จ ถ้ามีจะไม่เพิ่มและไปตรวจสอบในส่วนของ if (Seats.Contains(seatNumbers))
+                    return seatNumbers; //ส่งค่าไป seatNumbers เพื่อให้ GetSeatNumber ส่งค่าตำแหน่งไปยัง main ได้
                 }
             }
         }
@@ -260,7 +272,7 @@ namespace Project_Final
             {
                 Console.WriteLine($"\nTotal price: {totalPrice} THB");
                 double discount = 0.10;
-                totalPrice = (int)(totalPrice * (1 - discount));
+                totalPrice = (int)(totalPrice * (1 - discount)); // 1 หมายถึง 100% ของราคาปกติ
                 Console.WriteLine($"\nYou get a 10% discount! Total price after discount: {totalPrice} THB");
             }
             else
@@ -271,44 +283,49 @@ namespace Project_Final
         }
 
         static bool ConfirmBooking(List<Ticket> Summarysummarize, ref int totalPrice)
+        //static เรียกใช้โดยตรง bool ประเภทtrueหริอfalseเพื่อบอกว่าจะดำเนินต่อหรือสิ้นสุดโปรแกรม Listคือเป็นรายการที่เก็บรายละเอียดการจอง (ใช้แสดลงผ่าน GetSummary) ref รับค่าและราคาปรับเปลี่ยน จะสามารถกลับไปโปรแกรมหลักได้
         {
-            while (true)
+            while (true) //วนจนกว่าจะตอบถูก
             {
-                Console.Write("\nConfirm your booking? (Yes/No/Cancel): ");
-                string userResponse = Console.ReadLine().ToLower();
+                Console.Write("\nConfirm your booking? (Yes/Add more/Cancel): ");
+                string userResponse = Console.ReadLine().ToLower(); //รับข้อมูลจากผู้ใช้ tolower คือเขียนตัวเล็กได้
 
                 if (userResponse == "yes")
                 {
                     Console.WriteLine("\nThank you for your booking!");
                     Console.WriteLine("\n---- All Booking Details ----");
                     foreach (var booking in Summarysummarize)
+                    //ใช้ foreach เพื่อใช้กับรายการ เช่น list array hashset , var ใช้ให้โปรแกรมเดาประเภทข้อมูลของ booking ที่เป็นตัวแปรที่ถูกกำหนดเพื่อเก็บค่าของแต่ละรายการใน Summarysummarize มาทำงานทีละค่าขณะลูปวน(SummarysummarizeคือListที่เก็บรายละเอียดการจอง)
                     {
-                        Console.WriteLine(booking.GetSummary());
+                        Console.WriteLine(booking.GetSummary()); //เรียก method GetSummary ของ bookingที่เป็น objectของTicketเพื่อแสดงรายละเอียดตั๋วนั้นๆ
                     }
 
                     Console.WriteLine("\nGoodbye!");
-                    return false;
+                    return false; // จบโปรแกรมโดยส่งค่า false กลับไป
                 }
-                else if (userResponse == "no")
+                else if (userResponse == "add more")
                 {
                     Console.WriteLine("\nStarting a new booking...\n");
-                    return true;
+                    return true; // รันโปรแกรมต่อ ค่าเป็น true
                 }
                 else if (userResponse == "cancel")
                 {
                     Console.WriteLine("\nBooking cancelled. Exiting program.");
-                    return false;
+                    return false; // จบโปรแกรมโดยส่งค่า false กลับไป
                 }
                 else
                 {
-                    Console.WriteLine("\nPlease type yes/no/cancel");
+                    Console.WriteLine("\nPlease type Yes/Add more/Cancel");
                 }
             }
         }
     }
 
-    class Ticket
+    class Ticket // คลาสนี้ใช้สำหรับสร้างObjectที่แทนตั๋ว1ใบ แต่ละObjectจะเก็บข้อมูลเฉพาะของตั๋ว เช่น ชื่อหนัง เวลา วันที่
     {
+        // public คือ สามารถเข้าถึงได้จากภายนอกคลาส
+        // private set คือไม่สามารถเปลี่ยนค่าจากภายนอกได้(ค่าถูกตั้งค่าได้เฉพาะภายในคลาส
+        // get คือใช้ในการอ่านค่า เพื่อดึงค่าที่เก็บไว้ในตัวแปรและส่งค่ากลับให้
         public string Movie { get; private set; }
         public string Time { get; private set; }
         public string Date { get; private set; }
@@ -316,17 +333,18 @@ namespace Project_Final
         public string Zone { get; private set; }
         public string SeatNumber { get; private set; }
 
-        public Ticket(string movie, string time, string date, int price, string zone, string seatNumber)
+        public Ticket(string movie, string time, string date, int price, string zone, string seatNumber) 
+        // methodพิเสษที่มีชื่อเดียวกับclassเพื่อกำหนดค่าของObjectตอนที่สร้างขึ้นมา เมื่อสร้างObject Ticket จะต้องส่งข้อมูลมาให้ครบ เช่น ชื่อ เวลา
         {
-            Movie = movie;
-            Time = time;
-            Date = date;
-            Price = price;
-            Zone = zone;
-            SeatNumber = seatNumber;
+            Movie = movie; // Teeyod
+            Time = time; // 12.00
+            Date = date; // 25/11/2024
+            Price = price; //120
+            Zone = zone; //VIP
+            SeatNumber = seatNumber; //A5
         }
 
-        public string GetSummary()
+        public string GetSummary() //แสดงรายละเอียดตั๋ว
         {
             return $"Movie: {Movie}, Date: {Date}, Time: {Time}, Price: {Price} THB, Zone: {Zone}, Seat: {SeatNumber}";
         }
