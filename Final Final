@@ -174,7 +174,7 @@ namespace Project_Final
 
         static int ApplyDiscount(int ticketCount, int totalPrice)
         {
-            if (ticketCount > 2)
+            if (ticketCount > 5)
             {
                 Console.WriteLine($"\nTotal price: {totalPrice} THB");
                 double discount = 0.10;
