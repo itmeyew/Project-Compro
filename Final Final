@@ -192,7 +192,7 @@ namespace Project_Final
         {
             while (true)
             {
-                Console.Write("\nConfirm your booking? (Yes/No/Cancel): ");
+                Console.Write("\nConfirm your booking? (Yes/Add more/Cancel): ");
                 string userResponse = Console.ReadLine().ToLower();
 
                 if (userResponse == "yes")
@@ -207,7 +207,7 @@ namespace Project_Final
                     Console.WriteLine("\nGoodbye!");
                     return false;
                 }
-                else if (userResponse == "no")
+                else if (userResponse == "add more")
                 {
                     Console.WriteLine("\nStarting a new booking...\n");
                     return true;
