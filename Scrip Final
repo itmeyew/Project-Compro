@@ -1,0 +1,334 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Project_Final
+{
+    class MainCar
+    {
+        static void Main()
+        {
+            List<Ticket> Summarysummarize = new List<Ticket>();
+            //สร้างlistเพื่อเก็บรายละเอียดข้อมูลการจอง TicketคือObjectที่จะเก็บข้อมูลเข้าไป Summarysummarize คือชื่อตัวแปร
+            HashSet<string> Seats = new HashSet<string>(); //ใช้ชุดข้อมูลHashSet(ชุดของค่าที่ไม่ซ้ำกัน) ใช้เก็บที่นั่งที่จองไปแล้ว
+            bool continueProgram = true; //ให้ตัวแปร continueProgram มีค่าเริ่มต้นเป็น true (วนใหม่เรื่อยๆ) จะเป็น false ก็ต่อเมื่อยกเลิกหรืออกโปรแกรม
+
+            string[] movies = { "Teeyod", "Godzilla", "Titanic", "The Godfather", "Jurassic Park", "Forrest Gump", "Interstellar", "Avengers: Endgame", "Avatar", "The Matrix" };
+            string[] times = { "12:00 P.M", "15:00 P.M", "17:30 P.M", "18:00 P.M", "19:00 P.M", "20:00 P.M", "21:00 P.M" };
+            string[] date = { "Monday 25/11/2024", "Tuesday 26/11/2024" };
+            //ประกาศ Array
+
+            while (continueProgram) //ทำงานซ้ำจนกว่าโปรแกรมจะเป็น false
+            {
+                Console.WriteLine("Welcome to Co-Prom Cinema\n");
+                DisplayMovies(movies, date); //เรียกmethodsหน้าโปรแกรมหนัง movies date คือค่าที่ส่งเข้ามาเพื่อให้โปรแกรมอ้างอิงค่าที่ส่งมา
+
+                string selectedMoviesDate = SelectedMoviesDate(movies, date, out int scheduleChoice);
+                /*ประกาศชื่อตัวแปรเป็นselectedMoviesDate ตัวแปรนี้จะเก็บข้อมูลจาก methods ของ SelectedMoviesDate , out int scheduleChoice คือการส่งตัวแปรของ scheduleChoice เข้าไปในฟังก์ชันที่รับค่าที่ส่งออกจาก SelectedMoviesDate
+                 * ตัวอย่างคือเมื่อผู้ใช้ดูหนังที่ 8
+                 * scheduleChoice จะเข้าไปเก็บค่าเลข 8
+                 * ตรง methods ของ selectedMoviesDate จะมีฟังก์ชันคือค่า เมื่อ scheduleChoice > 5 จะคืนค่า data[1](Tuesday 26/11/2024)
+                 * เท่ากับว่า ตัวแปร scheduleChoice จะมีค่าเป็น 8 , ตัวแปร selectedMoviesDate จะมีค่าเป็น data[1](Tuesday 26/11/2024)
+                 */
+                string selectedTime = SelectedTime(times); //ประกาศตัวแปร เก็บค่าที่ผู้ใช้เลือกเวลาไว้ใน SelectedTime
+
+                int ticketCount = TicketCount(); //ประกาศตัวแปร เก็บค่าที่ผู้ใช้ใส่จำนวนตั๋วไว้ใน TicketCount
+
+                string selectedZone = SelectedZone(out int ticketPrice);
+                /*ประกาศตัวแปร เก็บค่าที่ผู้ใช้เลือกที่นั่งไว้ใน SelectedZone
+                 * ตัวอย่างคือเมื่อผู้ใช้เลือกโซนที่นั่งโดยเลือกจากหมายเลข 1-3 ฟังก์ชัน ticketPrice จะตั้งราคาตั๋วตามโซนและคืนค่าชื่อโซนเป็นผลลัพธ์
+                 *ตัวแปร ticketPrice ที่ส่งด้วย out จะถูกกำหนดราคาภายในฟังก์ชัน (120,160,220)
+                 ***ตัวแปร selectedZone จะเก็บชื่อโซน , ticketPrice จะเก็บราคาตั๋ว***
+                */
+
+                for (int i = 0; i < ticketCount; i++) //วนลูปตามจำนวนตั๋วที่ผู้ใช้ให้มา เพิ่มทีละ1จนกว่าจะถึงตามจำนวน ticketCount
+                {
+                    string seatNumbers = GetSeatNumber(Seats, i + 1);
+                    /*ใช้ฟังก์ชันจาก GetSeatNumber เพื่อรับเลขที่นั่งสำหรับตั๋ว
+                     *i + 1คือ
+                     *i คือตัวนับในลูป คือตัวเริ่มต้นที่ 0 และจะเพิ่มไปขึ้น1ไปเรื่อยๆจนถึง ticketCount
+                     *เท่ากับค่าของ i จะเริ่มที่ 0 แต่นำมา + 1 เพื่อที่จะให้โปรแกรมเริ่มนับเลขจาก 1 แทนที่จะเป็น 0
+                     *(ตัวอย่าง ถ้าไม่มี + 1 โปรแกรมจะแสดงผลว่า ตั๋วใบที่ 0
+                     *       ถ้ามี + 1 โปรแกรมจะแสดงผลว่า ตั๋วใบที่ 1)
+                     *(ตัวอย่างที่ 2 เมื่อผู้ใช้ป้อน 3 ที่นั่ง(A1,A2,A3))
+                     *  รอบลูปรอบที่ 1 จะเริ่มที่ 0 และบวกค่า i + 1 จะแสดงผลว่า ตั๋วใบที่ 1
+                     *  รอบลูปรอบที่ 2 จะเริ่มที่ 1 และบวกค่า i + 1 จะแสดงผลว่า ตั๋วใบที่ 2
+                     *  รอบลูปรอบที่ 3 จะเริ่มที่ 2 และบวกค่า i + 1 จะแสดงผลว่า ตั๋วใบที่ 3
+                     */
+                    Ticket ticket = new Ticket(movies[scheduleChoice - 1], selectedTime, selectedMoviesDate, ticketPrice, selectedZone, seatNumbers);
+                    //ประกาศสร้าง Object โดยใช้ค่า ชื่อหนัง , เวลา , วันที่ , ราคาตั๋ว , โซนที่นั่ง , ที่นั่ง
+                    Summarysummarize.Add(ticket); // เก็บข้อมูลแต่ละตั๋วลงไปใน list ของตั๋ว 
+                }
+
+                int totalPrice = ticketCount * ticketPrice; // คำนวณราคาทัั้งหมดจาก จำนวนตั๋ว,ราคาตั๋ว เข้าไปในตัวแปร totalPrice
+                totalPrice = ApplyDiscount(ticketCount, totalPrice); //ตรวจสอบจากฟังก์ชัน ApplyDiscount ว่าตั๋วเกิน5ใบมั้ย ถ้าเกินจะรับส่วนลด 10% ละจะถูกอัปเดตลงในตัวแปร totalPrice
+
+                continueProgram = ConfirmBooking(Summarysummarize, ref totalPrice);
+                /*
+                 * แสดงรายะเอียดการจองทั้งหมดใน Summarysummarize และใช้ผู้ใช้เลือก Yes(จบโปรแกรม) No(เริ่มใหม่) Cancel(ยกเลิกทั้งหมดและออกโปรแกรม)
+                 * หาก Yes จะคืนค่า false และโปรแกรมจะหยุด (Cancelเหมือนกัน)
+                 * หาก No จะคืนค่า true เพื่อวนลูปใหม่ (ตามตรงนี้ while (continueProgram) //ทำงานซ้ำจนกว่าโปรแกรมจะเป็น false )
+                 * ref totalPrice คือ ฟังก์ชันส่งตัวแปรไปฟังก์ชันโดยการอ้างอิง(เมื่อมีการเปลี่ยนแปลงค่า)
+                 * (ตัวอย่าง)
+                 * ตัวแปร totalPrice คือราคาตั๋วรวมทั้งหมด
+                 * ฟังก์ชัน ConfirmBooking เมื่อยืนยันตั๋ว อาจจะมีการเปลี่ยนแปลงราคาตั๋วได้ถ้ามีส่วนลด หากมีจะถือเป็นการคำนวณใหม่
+                 * ref totalPrice เลยสามารถเปลี่ยนค่า totalPrice ได้โดยตรงละค่าที่เปลี่ยนจะแสดงผล หากไม่ใช้ ref เมื่อมีการเปลี่ยนแปลงค่าใน ConfirmBooking จะไม่ส่งผลต่อ totalPrice
+                 * (ตัวอย่างที่ 2)
+                 * มี ref - ราคาตั๋วตอนแรก 500 และได้รับส่วนลด 50 (เปลี่ยนแปลงค่าในฟังก์ชัน)โปรแกรมจะแสดงผลเป็น 450
+                 * ไม่มี ref - ราคาตั๋วตอนแรก 500 และได้รับส่วนลด 50 (เปลี่ยนแปลงค่าในฟังก์ชัน)โปรแกรมจะยังคงแสดงผลเป็น 500
+                 */
+            }
+        }
+
+        static void DisplayMovies(string[] movies, string[] date)
+        /*ส่วนประกอบ methods 
+         * staticสามารถใช้เรียกได้โดยตรงจากคลาส โดยไม่ต้องสร้าง Object ของคลาสก่อน
+         * ตัวอย่าง (อิงจากข้อนี้)
+         * 
+         *      มี static จะสามารถนำไปใช้งานใน method main ได้เลยโดยการพิมพ์แค่ DisplayMovies(movies, date); แบบนี้จะคือการไม่สร้าง object เช่น
+         *      static void Main ()
+         *      {
+         *          DisplayMovies(movies, date);
+         *      }
+         *      static void DisplayMovies(string[] movies, string[] date)
+         *      {
+         *          //Code
+         *      }
+         *      
+         *      ไม่มี static ถ้าจะทำไปใช้งานใน method main จะต้องสร้าง object ของคลาสก่อนถึงจะเรียกใช้ได้ เช่น
+         *      static void Main ()
+         *      {
+         *          Program (ชื่อ) = new Program ();
+         *          (ชื่อ).DisplayMovies(movies, date); //สร้าง object เพื่อเรียก
+         *      }
+         *      void DisplayMovies(string[] movies, string[] date)
+         *      {
+         *          //Code
+         *      }
+         * 
+         * Void คือบอกว่า method นี้ไม่มีค่าที่ส่งกลับ
+         *      Void หมายถึงค่าที่บอกว่าmethodนี้ไม่มีค่าที่ส่งกลับไปให้ผู้เรียกใช้ เช่น แสดงผลข้อมูลหรือทำงานโค้ดให้เสร็จโดยไม่ต้องคืนค่ากลับไป
+         *      ---ถ้าไม่มี void ก็คือใช้ฟังก์ชัน return เช่น static int Add(int a, int b) { return a + b } ก็คือคืนค่าผลรวม---
+         *      
+         * string[] movies คือเป็นการรับพารามิเตอร์เป็น array ของชื่อหนัง
+         * string[] date คือเป็นการรับพารามิเตอร์เป็น array ของชื่อวันที่
+         * พารามิเตอร์ คือ ตัวแปรข้างนอกที่ส่งเข้าไปใน method เพื่อให้ method นั้นสามารถใช้ค่าตัวแปรที่ส่งเข้ามาได้
+         */
+        {
+            Console.WriteLine($"Today's movie program ({date[0]}):"); //แสดงวันที่ data[0](Monday 25/11/2024)
+            for (int i = 0; i < 5; i++) //ลุป5เรื่องแรกของ array movies
+            {
+                Console.WriteLine($"{i + 1}. {movies[i]}"); // i + 1 คือเพิ่มค่าลำดับเริ่มต้น จาก 0 เป็น 1 และดึงชื่อ movies[i] แต่ละเรื่อง (indexที่ 0 ถึง 4)
+            }
+
+            Console.WriteLine($"\nTomorrow's movie program ({date[1]}):"); //แสดงวันที่ data[1](Tuesday 26/11/2024)
+            for (int i = 5; i < 10; i++) //ลุป5เรื่องหลังของ array movies
+            {
+                Console.WriteLine($"{i + 1}. {movies[i]}"); // i + 1 คือเพิ่มค่าลำดับเริ่มต้น จาก 5 เป็น 6 และดึงชื่อ movies[i] แต่ละเรื่อง (indexที่ 5 ถึง 9)
+            }
+        }
+
+        static string SelectedMoviesDate(string[] movies, string[] date, out int scheduleChoice)
+        /*Static เพื่อเรียกใช้ได้โดยตรง ชนิดค่าข้อมูลคือ string ชื่อตัว methodคือSelectedMoviesDate รับ Array จาก movies date และส่งออกข้อมูลที่ผู้ใช้เลือกไปที่ตัวแปร scheduleChoice
+         * รับข้อมูลมาจากผู้ใช้ (เลือกหมายเลขที่จะดู)
+         * ตรวจสอบความถูกต้องของข้อมูล (เลข 1 - 10)
+         * คืนค่าวันที่ตามการเลือก 1-5 วันที่25 6-10 วันที่ 26
+         */
+        {
+            while (true) //ลูปไปจนกว่าผู้ใช้จะตอบถูกตามที่ให้เลือก
+            {
+                Console.Write("\nWhich number movie do you select? : ");
+                if (int.TryParse(Console.ReadLine(), out scheduleChoice) && scheduleChoice >= 1 && scheduleChoice <= 10)
+                //แปลงค่าเป็น int ค่าที่แปลงจะถูกเก็บใน scheduleChoice และให้เลือก 1 - 10 ถ้าผู้ใช้ตอบถูกต้อง
+                {
+                    return scheduleChoice <= 5 ? date[0] : date[1]; //จะคืนค่าวันที่ 1-5 วันแรก 6-10 วันที่สอง
+                }
+                Console.WriteLine("\nInvalid choice. Please try again.\n");
+                DisplayMovies(movies, date); //หากตอบผิดจะลูปไปถามใหม่ที่หน้า display อีกครั้ง
+            }
+        }
+
+        static string SelectedTime(string[] times)
+        //Static เพื่อเรียกใช้ได้โดยตรง ชนิดค่าข้อมูลคือ string ชื่อmethod คือ SelectedTime พารามิเตอร์คือ string[] times ที่เป็น array เรื่องเวลา
+        {
+            int timeChoice; //ตัวแปรเก็บหมายเลขเวลา
+            do // ใช้รับค่าที่ผู้ใช้ให้มาก่อน1รอบแล้วค่อยตรวจสอบ และวนจนกว่าผู้ใช้จะตอบถูกเลข (1-10)
+            {
+                Console.WriteLine("\nPlease select the time:"); //ให้เลือกเวลา
+                for (int i = 0; i < times.Length; i++) //ใช้ for ลูปจาก indexที่0 ไปถึงindexสุดท้าย (Length) คือจำนวนสมาชิกทั้งหมดใน array
+                {
+                    Console.WriteLine($"{i + 1}. {times[i]}"); // +1 เพื่อให้นับรอบที่ 1 แทนที่จะเป็น 0
+                }
+
+                Console.Write("\nWhat time do you choose? : "); // ถามให้เลือกเวลา
+                if (!int.TryParse(Console.ReadLine(), out timeChoice) || timeChoice < 1 || timeChoice > times.Length)
+                // แปลงค่าผู้ป้อนเป็นตัวเลข ถ้าแปลงสำเร็จ ค่าจะถูกเก็บในตัวแปร timeChoice
+                {
+                    Console.WriteLine("\nInvalid time! please try again."); // ถ้านอกเหนือจากที่กำหนดจะแสดงว่าผิด
+                }
+            } while (timeChoice < 1 || timeChoice > times.Length); // ใช้รับค่าที่ผู้ใช้ให้มาก่อน1รอบแล้วค่อยตรวจสอบ และวนจนกว่าผู้ใช้จะตอบถูกเลข (1-10)
+
+            return times[timeChoice - 1]; // times คือ array ของข้อความเวลา timeChoice คือหมายเลขที่ผู้ใช้เลือก 1-3
+            // -1 คือลดค่าให้ตรงกับ index , สมมุติว่าผู้ใช้เลือกเลข 1 (12:00 PM) จึงใช้ -1 เพื่อแปลงหมายเลขที่เลือกให้ตรงกับ index ใน array (indexที่0ของtimesก็คือ 12:00 PM)
+            // return กลับไปยัง methods ที่เรียกใช้
+        }
+
+        static int TicketCount()
+        //static ใช้เรียกได้โดยตรง int TicketCount methodนี้จะส่งค่ากลับไปเป็น int 
+        {
+            int ticketCount; //ประกาศตัวแปร
+            do // ลูปไป1รอบก่อนที่จะตรวจว่าผู้ใช้ใส่เลขถูกมั้ย
+            {
+                Console.Write("\nHow many tickets do you want to buy? : "); //ถามจำนวนตั๋ว
+                if (!int.TryParse(Console.ReadLine(), out ticketCount) || ticketCount <= 0) //แปลงค่าเป็นint หากใส่ที่ไม่ใช่ตัวหรือเท่ากับหรือน้อยกว่า0 จะเป็น false และลูป
+                {
+                    Console.WriteLine("\nInvalid input! Please try again."); //แจ้งเตือนว่าผิด
+                }
+
+            } while (ticketCount <= 0); // ถ้าใส่ค่าไม่ถูกต้อง(ไม่ใช่0หรือน้อยกว่า0)ลูปจะทำงานอีกครั้ง
+
+            return ticketCount; //ถ้าได้ค่าที่ถูกต้อง methodนี้จะส่งค่าจำนวนตั๋วที่ผู้ใช่ใส่ไปยังโปรแกรม
+        }
+
+        static string SelectedZone(out int ticketPrice)
+        //static ส่งตรง methodนี้ส่งค่าเป็นstring ส่งค่าราคาตั่วกลับไปโปรแกรม
+        {
+            while (true) //ทำงานซ้ำไปเรื่อยๆ ตราบใดที่เงื่อไขใน()ยังเป็นจริง (true)
+            {
+                Console.WriteLine("\nSelect Zone:");
+                Console.WriteLine("1. Economy Zone price 120 THB");
+                Console.WriteLine("2. Regular Zone price 160 THB");
+                Console.WriteLine("3. VIP Zone price 220 THB");
+                Console.Write("\nEnter seat zone you select: ");
+
+                if (int.TryParse(Console.ReadLine(), out int zoneChoice) && zoneChoice >= 1 && zoneChoice <= 3)
+                // ตรวจสอบ
+                {
+                    switch (zoneChoice)
+                    {
+                        case 1:
+                            Console.WriteLine("You select Economy");
+                            Console.WriteLine("TicketPrice is 120");
+                            ticketPrice = 120;
+                            return "Economy";
+                        case 2:
+                            Console.WriteLine("You select Regular");
+                            Console.WriteLine("TicketPrice is 160");
+                            ticketPrice = 160;
+                            return "Regular";
+                        case 3:
+                            Console.WriteLine("You select VIP");
+                            Console.WriteLine("TicketPrice is 220");
+                            ticketPrice = 220;
+                            return "VIP";
+                    }
+                }
+                Console.WriteLine("\nInvalid choice. Please try again.");
+            }
+        }
+
+        static string GetSeatNumber(HashSet<string> Seats, int ticketNumber)
+        {
+            string seatNumbers;
+            while (true)
+            {
+                Console.Write($"Enter seat number for Ticket {ticketNumber} (A1-A10, B1-B10): ");
+                seatNumbers = Console.ReadLine()?.Trim();
+                if (!System.Text.RegularExpressions.Regex.IsMatch(seatNumbers, @"^[A-B][1-9]$|^[A-B]10$"))
+                {
+                    Console.WriteLine("Invalid seat number. Please choose a seat between A1-A10 or B1-B10.");
+                    continue;
+                }
+                if (Seats.Contains(seatNumbers))
+                {
+                    Console.WriteLine($"Seat {seatNumbers} is already booked. Please choose another seat.");
+                }
+                else
+                {
+                    Seats.Add(seatNumbers);
+                    return seatNumbers;
+                }
+            }
+        }
+
+        static int ApplyDiscount(int ticketCount, int totalPrice)
+        {
+            if (ticketCount > 5)
+            {
+                Console.WriteLine($"\nTotal price: {totalPrice} THB");
+                double discount = 0.10;
+                totalPrice = (int)(totalPrice * (1 - discount));
+                Console.WriteLine($"\nYou get a 10% discount! Total price after discount: {totalPrice} THB");
+            }
+            else
+            {
+                Console.WriteLine($"\nTotal price: {totalPrice} THB");
+            }
+            return totalPrice;
+        }
+
+        static bool ConfirmBooking(List<Ticket> Summarysummarize, ref int totalPrice)
+        {
+            while (true)
+            {
+                Console.Write("\nConfirm your booking? (Yes/No/Cancel): ");
+                string userResponse = Console.ReadLine().ToLower();
+
+                if (userResponse == "yes")
+                {
+                    Console.WriteLine("\nThank you for your booking!");
+                    Console.WriteLine("\n---- All Booking Details ----");
+                    foreach (var booking in Summarysummarize)
+                    {
+                        Console.WriteLine(booking.GetSummary());
+                    }
+
+                    Console.WriteLine("\nGoodbye!");
+                    return false;
+                }
+                else if (userResponse == "no")
+                {
+                    Console.WriteLine("\nStarting a new booking...\n");
+                    return true;
+                }
+                else if (userResponse == "cancel")
+                {
+                    Console.WriteLine("\nBooking cancelled. Exiting program.");
+                    return false;
+                }
+                else
+                {
+                    Console.WriteLine("\nPlease type yes/no/cancel");
+                }
+            }
+        }
+    }
+
+    class Ticket
+    {
+        public string Movie { get; private set; }
+        public string Time { get; private set; }
+        public string Date { get; private set; }
+        public int Price { get; private set; }
+        public string Zone { get; private set; }
+        public string SeatNumber { get; private set; }
+
+        public Ticket(string movie, string time, string date, int price, string zone, string seatNumber)
+        {
+            Movie = movie;
+            Time = time;
+            Date = date;
+            Price = price;
+            Zone = zone;
+            SeatNumber = seatNumber;
+        }
+
+        public string GetSummary()
+        {
+            return $"Movie: {Movie}, Date: {Date}, Time: {Time}, Price: {Price} THB, Zone: {Zone}, Seat: {SeatNumber}";
+        }
+    }
+}
