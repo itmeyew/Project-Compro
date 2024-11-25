@@ -219,7 +219,7 @@ namespace Project_Final
                 }
                 else
                 {
-                    Console.WriteLine("\nPlease type yes/no/cancel");
+                    Console.WriteLine("\nPlease type Yes/Add more/Cancel");
                 }
             }
         }
