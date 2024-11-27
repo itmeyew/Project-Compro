@@ -103,12 +103,12 @@ namespace Project_Final
             do
             {
                 Console.Write("\nHow many tickets do you want to buy? (Maximum 20) : ");
-                if (!int.TryParse(Console.ReadLine(), out ticketCount) || ticketCount <= 0 || ticketCount >= 20)
+                if (!int.TryParse(Console.ReadLine(), out ticketCount) || ticketCount <= 0 || ticketCount > 20)
                 {
                     Console.WriteLine("\nInvalid input! Please try again.");
                 }
 
-            } while (ticketCount <= 0 || ticketCount >= 20);
+            } while (ticketCount <= 0 || ticketCount > 20);
 
             return ticketCount;
         }
