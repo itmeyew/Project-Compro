@@ -183,12 +183,12 @@ namespace Project_Final
             do // ลูปไป1รอบก่อนที่จะตรวจว่าผู้ใช้ใส่เลขถูกมั้ย
             {
                 Console.Write("\nHow many tickets do you want to buy? (Maximum 20) : "); //ถามจำนวนตั๋ว
-                if (!int.TryParse(Console.ReadLine(), out ticketCount) || ticketCount <= 0 || ticketCount >= 20) //แปลงค่าเป็นint หากใส่ที่ไม่ใช่ตัวหรือเท่ากับหรือน้อยกว่า0 จะเป็น false และลูป
+                if (!int.TryParse(Console.ReadLine(), out ticketCount) || ticketCount <= 0 || ticketCount > 20) //แปลงค่าเป็นint หากใส่ที่ไม่ใช่ตัวหรือเท่ากับหรือน้อยกว่า0 จะเป็น false และลูป
                 {
                     Console.WriteLine("\nInvalid input! Please try again."); //แจ้งเตือนว่าผิด
                 }
 
-            } while (ticketCount <= 0 || ticketCount >= 20); // ถ้าใส่ค่าไม่ถูกต้อง(ไม่ใช่0หรือน้อยกว่า0)ลูปจะทำงานอีกครั้ง
+            } while (ticketCount <= 0 || ticketCount > 20); // ถ้าใส่ค่าไม่ถูกต้อง(ไม่ใช่0หรือน้อยกว่า0)ลูปจะทำงานอีกครั้ง
 
             return ticketCount; //ถ้าได้ค่าที่ถูกต้อง methodนี้จะส่งค่าจำนวนตั๋วที่ผู้ใช่ใส่ไปยังโปรแกรม
         }
