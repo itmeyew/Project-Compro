@@ -1,50 +1,314 @@
-static void Main()
-//หน้าที่ใช่ทำการลูป การทำงานหลักๆและเรียกใช้ฟังก์ชันอื่นๆ
-//The function is used to loop, perform main operations and call other functions.
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
+
+namespace Project_Final
 {
-    List<Ticket> Summarysummarize = new List<Ticket>();
-    /*สร้าง List ไว้สำหรับใช้เก็บข้อมูลตั๋วแต่ละใบ List<Ticket>หมายถึงรายการที่เก็บตั๋วหนัง(เปรียบเสมือน กล่อง) และชื่อของList<Ticket>(กล่อง)นี้ก็คือ Summarysummarize ที่จะเก็บข้อมูลของตั๋วแต่ละใบไว้ในรูปแบบของ object ของ class ticket
-     * (เชื่อมต่อกับคลาสTicket , ConfirmBooking และ Ticket ticket = new Ticket)
-     * Create a List to store each ticket. List<Ticket> means a list of movie tickets (like a box) 
-     * and the name of List<Ticket>(box) is Summarysummarize which will store each ticket's information in the form of an object of class ticket.*/
-    HashSet<string> Seats = new HashSet<string>();
-    ////ใช้ชุดข้อมูลHashSet(ชุดของค่าที่ไม่ซ้ำกัน) ใช้เก็บที่นั่งที่จองไปแล้ว ใช้กับเมธอดGetSeatNumber
-    ///// Use HashSet(a set of unique values) to store the reserved seats. Use with GetSeatNumber method.
-    bool continueProgram = true;
-    //ประกาศตัวแปรชนิดข้อมูลboolที่ชื่อcontinueProgramมีเริ่มต้นเป็น true (วนใหม่เรื่อยๆ) จนกว่าจะเป็น false ก็ต่อเมื่อยกเลิกหรือออกโปรแกรม
-    //Declare a bool type variable named continueProgram that is initialized as true (repeating over and over again) until it becomes false only when the program is canceled or exited.
-    string[] movies = { "Teeyod", "Godzilla", "Titanic", "The Godfather", "Jurassic Park", "Forrest Gump", "Interstellar", "Avengers: Endgame", "Avatar", "The Matrix" };
-    string[] times = { "12:00 P.M", "15:00 P.M", "17:30 P.M", "18:00 P.M", "19:00 P.M", "20:00 P.M", "21:00 P.M" };
-    string[] date = { "Monday 25/11/2024", "Tuesday 26/11/2024" };
-
-    while (continueProgram)
-    // หน้าที่คือลูปจนกว่าผู้ใช้จะยกเลิกโปรแกรม (ซ้ำกว่าโปรแกรมจะเป็น false) (เชื่อมกับ ConfirmBooking)
-    // The function is to loop until the user cancels the program (until the program is false) (connect with ConfirmBooking)
+    class MainCar
     {
-        Console.WriteLine("Welcome to Co-Prom Cinema\n"); // Show welcome
-        DisplayMovies(movies, date); //movies และ date ที่อยู่ในวงเล็บหลังชื่อฟังก์ชัน เรียกว่า อาร์กิวเมนต์ (arguments).
-        // แสดงหน้า method displaymain
-        //show DisplayMovies form method DisplayMovies
+        static void Main()
+        //หน้าที่ใช่ทำการลูป การทำงานหลักๆและเรียกใช้ฟังก์ชันอื่นๆ
+        //The function is used to loop, perform main operations and call other functions.
+        {
+            List<Ticket> Summarysummarize = new List<Ticket>();
+            /*สร้าง List ไว้สำหรับใช้เก็บข้อมูลตั๋วแต่ละใบ List<Ticket>หมายถึงรายการที่เก็บตั๋วหนัง(เปรียบเสมือน กล่อง) และชื่อของList<Ticket>(กล่อง)นี้ก็คือ Summarysummarize ที่จะเก็บข้อมูลของตั๋วแต่ละใบไว้ในรูปแบบของ object ของ class ticket
+             * (เชื่อมต่อกับคลาสTicket , ConfirmBooking และ Ticket ticket = new Ticket)
+             * Create a List to store each ticket. List<Ticket> means a list of movie tickets (like a box) 
+             * and the name of List<Ticket>(box) is Summarysummarize which will store each ticket's information in the form of an object of class ticket.*/
+            HashSet<string> Seats = new HashSet<string>();
+            ////ใช้ชุดข้อมูลHashSet(ชุดของค่าที่ไม่ซ้ำกัน) ใช้เก็บที่นั่งที่จองไปแล้ว ใช้กับเมธอดGetSeatNumber
+            ///// Use HashSet(a set of unique values) to store the reserved seats. Use with GetSeatNumber method.
+            bool continueProgram = true;
+            //ประกาศตัวแปรชนิดข้อมูลboolที่ชื่อcontinueProgramมีเริ่มต้นเป็น true (วนใหม่เรื่อยๆ) จนกว่าจะเป็น false ก็ต่อเมื่อยกเลิกหรือออกโปรแกรม
+            //Declare a bool type variable named continueProgram that is initialized as true (repeating over and over again) until it becomes false only when the program is canceled or exited.
+            string[] movies = { "Teeyod", "Godzilla", "Titanic", "The Godfather", "Jurassic Park", "Forrest Gump", "Interstellar", "Avengers: Endgame", "Avatar", "The Matrix" };
+            string[] times = { "12:00 P.M", "15:00 P.M", "17:30 P.M", "18:00 P.M", "19:00 P.M", "20:00 P.M", "21:00 P.M" };
+            string[] date = { "Monday 25/11/2024", "Tuesday 26/11/2024" };
 
-        string selectedMoviesDate = SelectedMoviesDate(movies, date, out int scheduleChoice);
-        //out int scheduleChoice ใช้เพื่อส่งค่าหมายเลขหนังที่ผู้ใช้เลือก ออกจากฟังก์ชัน กลับมาใน Main() โดยที่ค่าของตัวแปรนี้ถูกกำหนดในฟังก์ชัน SelectedMoviesDate.
-        //ประกาศชื่อตัวแปรเป็นselectedMoviesDate ตัวแปรนี้จะเก็บข้อมูลจาก methods ของ SelectedMoviesDate
-        /*Declare a variable name as selectedMoviesDate. This variable will store data from the SelectedMoviesDate methods.
-         * out int scheduleChoice is used to return the movie number selected by the user, 
-         * exiting the function, and returning in Main() with the value of this variable set in the SelectedMoviesDate function.*/
+            while (continueProgram)
+            // หน้าที่คือลูปจนกว่าผู้ใช้จะยกเลิกโปรแกรม (ซ้ำกว่าโปรแกรมจะเป็น false) (เชื่อมกับ ConfirmBooking)
+            // The function is to loop until the user cancels the program (until the program is false) (connect with ConfirmBooking)
+            {
+                Console.WriteLine("Welcome to Co-Prom Cinema\n"); // Show welcome
+                DisplayMovies(movies, date); //movies และ date ที่อยู่ในวงเล็บหลังชื่อฟังก์ชัน เรียกว่า อาร์กิวเมนต์ (arguments).
+                // แสดงหน้า method displaymain
+                //show DisplayMovies form method DisplayMovies
 
-        string selectedTime = SelectedTime(times);
-        //ประกาศชื่อตัวแปรเป็นselectedTime ตัวแปรนี้จะเก็บข้อมูลจาก methods ของ SelectedTime
-        //Declare a variable name as selectedTime . This variable will store data from the SelectedTime methods.
+                string selectedMoviesDate = SelectedMoviesDate(movies, date, out int scheduleChoice);
+                //out int scheduleChoice ใช้เพื่อส่งค่าหมายเลขหนังที่ผู้ใช้เลือก ออกจากฟังก์ชัน กลับมาใน Main() โดยที่ค่าของตัวแปรนี้ถูกกำหนดในฟังก์ชัน SelectedMoviesDate.
+                //ประกาศชื่อตัวแปรเป็นselectedMoviesDate ตัวแปรนี้จะเก็บข้อมูลจาก methods ของ SelectedMoviesDate
+                /*Declare a variable name as selectedMoviesDate. This variable will store data from the SelectedMoviesDate methods.
+                 * out int scheduleChoice is used to return the movie number selected by the user, 
+                 * exiting the function, and returning in Main() with the value of this variable set in the SelectedMoviesDate function.*/
 
-        int ticketCount = TicketCount();
-        //ประกาศชื่อตัวแปรเป็นticketCount ตัวแปรนี้จะเก็บข้อมูลจาก methods ของ TicketCount();
-        //Declare a variable name as ticketCount . This variable will store data from the TicketCount methods.
+                string selectedTime = SelectedTime(times);
+                //ประกาศชื่อตัวแปรเป็นselectedTime ตัวแปรนี้จะเก็บข้อมูลจาก methods ของ SelectedTime
+                //Declare a variable name as selectedTime . This variable will store data from the SelectedTime methods.
 
-        string selectedZone = SelectedZone(out int ticketPrice);
-        //ประกาศชื่อตัวแปรเป็นticketCount ตัวแปรนี้จะเก็บข้อมูลจาก methods ของ TicketCount();
-        //Declare a variable name as ticketCount . This variable will store data from the TicketCount methods.
+                int ticketCount = TicketCount();
+                //ประกาศชื่อตัวแปรเป็นticketCount ตัวแปรนี้จะเก็บข้อมูลจาก methods ของ TicketCount();
+                //Declare a variable name as ticketCount . This variable will store data from the TicketCount methods.
 
-        for (int i = 0; i < ticketCount; i++)
-        //เงื่อนไข: วนซ้ำตราบใดที่ i ยังน้อยกว่า ticketCount (จำนวนตั๋วที่ผู้ใช้ต้องการซื้อ).
-        //Condition: Iterate as long as i is less than ticketCount(the number of tickets the user wants to buy).
+                string selectedZone = SelectedZone(out int ticketPrice);
+                //ประกาศชื่อตัวแปรเป็นticketCount ตัวแปรนี้จะเก็บข้อมูลจาก methods ของ TicketCount();
+                //Declare a variable name as ticketCount . This variable will store data from the TicketCount methods.
+
+                for (int i = 0; i < ticketCount; i++)
+                //เงื่อนไข: วนซ้ำตราบใดที่ i ยังน้อยกว่า ticketCount (จำนวนตั๋วที่ผู้ใช้ต้องการซื้อ).
+                //Condition: Iterate as long as i is less than ticketCount(the number of tickets the user wants to buy).
+                {
+                    string seatNumbers = GetSeatNumber(Seats, i + 1);
+                    //เรียกใช้ฟังก์ชัน GetSeatNumber ส่ง Seats (เซ็ตของที่นั่งที่ถูกจองไปแล้ว) และหมายเลขตั๋ว i + 1.
+                    //Call the function GetSeatNumber to send Seats (set of reserved seats) and ticket number i + 1.
+                    Ticket ticket = new Ticket(movies[scheduleChoice - 1], selectedTime, selectedMoviesDate, ticketPrice, selectedZone, seatNumbers);
+                    //Create a Ticket (object from Ticket class) by specifying data.
+                    Summarysummarize.Add(ticket);
+                    //Add a ticket (ticket object) to the Summary Summarize, which is a List<Ticket>
+                    //Result: When the loop ends, there will be a list of all tickets according to the number of tickets the user has purchased.
+                }
+
+                int totalPrice = ticketCount * ticketPrice;
+                //Multiply the number of tickets booked (ticketCount) by the price per ticket (ticketPrice) to find the total.
+                totalPrice = ApplyDiscount(ticketCount, totalPrice);
+                //Call the ApplyDiscount function to check if the user has booked more than 5 tickets.
+                continueProgram = ConfirmBooking(Summarysummarize, ref totalPrice);
+                /*
+                 * Call the ConfirmBooking function to check if the user:
+
+                    Confirmed the booking (Yes).
+
+                    Want to book more (Add more).
+
+                    Cancel the booking (Cancel).
+
+                    Summarysummarize: Returns the total ticket list to be displayed in the function.
+
+                    ref totalPrice: Returns the final price (with any discounts) so that it can be updated within the function.
+                 */
+            }
+        }
+
+        static void DisplayMovies(string[] movies, string[] date) // ใช้หน้าที่สำหรับแสดงชื่อหนัง
+        {
+            Console.WriteLine($"Today's movie program ({date[0]}):");
+            for (int i = 0; i < 5; i++) // ใช้loopเพื่อวนแสดงชื่อหนัง แยกโปรแกรมหนัง1-5(วันนี้) 6-10(พรุ่งนี้)
+            {
+                Console.WriteLine($"{i + 1}. {movies[i]}");
+            }
+
+            Console.WriteLine($"\nTomorrow's movie program ({date[1]}):");
+            for (int i = 5; i < 10; i++)
+            {
+                Console.WriteLine($"{i + 1}. {movies[i]}");
+            }
+        }
+
+        static string SelectedMoviesDate(string[] movies, string[] date, out int scheduleChoice)
+        {
+            while (true)
+            {
+                Console.Write("\nWhich number movie do you select? : ");
+                if (int.TryParse(Console.ReadLine(), out scheduleChoice) && scheduleChoice >= 1 && scheduleChoice <= 10)
+                {
+                    return scheduleChoice <= 5 ? date[0] : date[1];
+                }
+                Console.WriteLine("\nInvalid choice. Please try again.\n");
+                DisplayMovies(movies, date);
+            }
+        }
+
+        static string SelectedTime(string[] times)
+        {
+            int timeChoice;
+            do
+            {
+                Console.WriteLine("\nPlease select the time:");
+                for (int i = 0; i < times.Length; i++)
+                {
+                    Console.WriteLine($"{i + 1}. {times[i]}");
+                }
+
+                Console.Write("\nWhat time do you choose? : ");
+
+                if (!int.TryParse(Console.ReadLine(), out timeChoice) || timeChoice < 1 || timeChoice > times.Length)
+                {
+                    Console.WriteLine("\nInvalid time! please try again.");
+                }
+            } while (timeChoice < 1 || timeChoice > times.Length);
+
+            return times[timeChoice - 1];
+        }
+
+        static int TicketCount()
+        {
+            int ticketCount;
+            do
+            {
+                Console.Write("\nHow many tickets do you want to buy? (Maximum 20) : ");
+                if (!int.TryParse(Console.ReadLine(), out ticketCount) || ticketCount <= 0 || ticketCount > 20)
+                {
+                    Console.WriteLine("\nInvalid input! Please try again.");
+                }
+
+            } while (ticketCount <= 0 || ticketCount > 20);
+
+            return ticketCount;
+        }
+
+        static string SelectedZone(out int ticketPrice)
+        {
+            while (true)
+            {
+                Console.WriteLine("\nSelect Zone:");
+                Console.WriteLine("1. Economy Zone price 120 THB");
+                Console.WriteLine("2. Regular Zone price 160 THB");
+                Console.WriteLine("3. VIP Zone price 220 THB");
+                Console.Write("\nEnter seat zone you select: ");
+
+                if (int.TryParse(Console.ReadLine(), out int zoneChoice) && zoneChoice >= 1 && zoneChoice <= 3)
+                {
+                    switch (zoneChoice)
+                    {
+                        case 1:
+                            Console.WriteLine("You select Economy");
+                            Console.WriteLine("TicketPrice is 120");
+                            ticketPrice = 120;
+                            return "Economy"; //Returns a string representing the zone name (e.g. "Economy", "Regular", "VIP").
+                            //Exit the function immediately after returning(the program will not continue in the function).
+                        case 2:
+                            Console.WriteLine("You select Regular");
+                            Console.WriteLine("TicketPrice is 160");
+                            ticketPrice = 160;
+                            return "Regular";
+                        case 3:
+                            Console.WriteLine("You select VIP");
+                            Console.WriteLine("TicketPrice is 220");
+                            ticketPrice = 220;
+                            return "VIP";
+                    }
+                }
+                Console.WriteLine("\nInvalid choice. Please try again.");
+            }
+        }
+
+        static string GetSeatNumber(HashSet<string> Seats, int ticketNumber)
+        {
+            string seatNumbers;
+            while (true)
+            {
+                Console.Write($"Enter seat number for Ticket {ticketNumber} (A1-A10, B1-B10): ");
+                seatNumbers = Console.ReadLine()?.Trim();//Use ? to prevent errors from calling .trim .trim is to cut unnecessary spaces around text.
+                if (!System.Text.RegularExpressions.Regex.IsMatch(seatNumbers, @"^[A-B][1-9]$|^[A-B]10$"))
+                /*System.Text.RegularExpressions is a method in C# that checks whether a string matches a specified pattern.
+                *Regex.IsMatch is used to check if a specified pattern is matched.
+                * System.Text.RegularExpressions normally returns true if the text matches the specified pattern, and false otherwise.
+                * ! is to reverse (negate) true to false and false to true.
+                * If the user enters an answer in seatNumbers as C3 that does not match the pattern, System.Text.RegularExpressions returns false but with ! ! false , it becomes true , the message Invalid seat number is displayed, and the program continues to run.
+                * If the user enters an answer of A5 which matches the pattern, System.Text.RegularExpressions.Regex.IsMatch returns true but with ! !true attached, it becomes false and the message is ignored and continues.
+                */
+                {
+                    Console.WriteLine("Invalid seat number. Please choose a seat between A1-A10 or B1-B10.");
+                    continue;
+                    //This section is used to skip the rest of the code in the current while (true) loop and immediately start the loop again, especially in cases where the seat number entered by the user does not conform to the specified pattern.
+                }
+                if (Seats.Contains(seatNumbers)) //// Use Seats.Contains to check if the entered seat is already in HashSet<string> Seats. If it is already reserved, it will display a new selection message and loop.
+                {
+                    Console.WriteLine($"Seat {seatNumbers} is already booked. Please choose another seat.");
+                }
+                else
+                {
+                    Seats.Add(seatNumbers);
+                    ////Add seat numbers to Seats, which is a HashSet containing the selected data. Add seatNumbers to Seats. If it doesn't exist, it will be added successfully. If it does, it will not be added and will be checked in the if(Seats.Contains(seatNumbers)) section.
+                    return seatNumbers;
+                    //// Pass the value to seatNumbers so that GetSeatNumber can send the position value to main.
+                }
+            }
+        }
+
+        static int ApplyDiscount(int ticketCount, int totalPrice)
+        {
+            if (ticketCount > 5)
+            {
+                Console.WriteLine($"\nTotal price: {totalPrice} THB");
+                double discount = 0.10; // 1 means 100% of the normal price.
+                totalPrice = (int)(totalPrice * (1 - discount));
+                Console.WriteLine($"\nYou get a 10% discount! Total price after discount: {totalPrice} THB");
+            }
+            else
+            {
+                Console.WriteLine($"\nTotal price: {totalPrice} THB");
+            }
+            return totalPrice;
+        }
+
+        static bool ConfirmBooking(List<Ticket> Summarysummarize, ref int totalPrice)
+        {
+            while (true) //Repeat until the answer is correct.
+            {
+                Console.Write("\nConfirm your booking? (Yes/Add more/Cancel): ");
+                string userResponse = Console.ReadLine().ToLower();
+
+                if (userResponse == "yes")
+                {
+                    Console.WriteLine("\nThank you for your booking!");
+                    Console.WriteLine("\n---- All Booking Details ----");
+                    foreach (var booking in Summarysummarize)
+                    /* Use foreach to work with lists such as list array hashset , var use to let the program guess the data type of booking which is a variable 
+                     * that is defined to store the value of each item in Summarysummarize to work one value at a time while looping (Summarysummarize is a List that stores booking details)*/
+                    {
+                        Console.WriteLine(booking.GetSummary());
+                    }
+
+                    Console.WriteLine("\nGoodbye!");
+                    return false; // End the program by returning false.
+                }
+                else if (userResponse == "add more")
+                {
+                    Console.WriteLine("\nStarting a new booking...\n");
+                    return true; // Continue running the program. Value is true.
+                }
+                else if (userResponse == "cancel")
+                {
+                    Console.WriteLine("\nBooking cancelled. Exiting program.");
+                    return false; // End the program by returning false.
+                }
+                else
+                {
+                    Console.WriteLine("\nPlease type Yes/Add more/Cancel");
+                }
+            }
+        }
+    }
+
+    class Ticket
+    {
+        //It is a variable that stores important information about the ticket and has an access modifier set to private to prevent direct external changes.
+        public string Movie { get; private set; }
+        public string Time { get; private set; }
+        public string Date { get; private set; }
+        public int Price { get; private set; }
+        public string Zone { get; private set; }
+        public string SeatNumber { get; private set; }
+
+        public Ticket(string movie, string time, string date, int price, string zone, string seatNumber)
+        //The public Ticket(...) function is a special function used to create an object of this class and initialize all of its properties.
+        {
+            Movie = movie;
+            Time = time;
+            Date = date;
+            Price = price;
+            Zone = zone;
+            SeatNumber = seatNumber;
+        }
+
+        public string GetSummary()
+        {
+            return $"Movie: {Movie}, Date: {Date}, Time: {Time}, Price: {Price} THB, Zone: {Zone}, Seat: {SeatNumber}";
+        }
+    }
+}
