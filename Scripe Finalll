@@ -1,0 +1,50 @@
+static void Main()
+//หน้าที่ใช่ทำการลูป การทำงานหลักๆและเรียกใช้ฟังก์ชันอื่นๆ
+//The function is used to loop, perform main operations and call other functions.
+{
+    List<Ticket> Summarysummarize = new List<Ticket>();
+    /*สร้าง List ไว้สำหรับใช้เก็บข้อมูลตั๋วแต่ละใบ List<Ticket>หมายถึงรายการที่เก็บตั๋วหนัง(เปรียบเสมือน กล่อง) และชื่อของList<Ticket>(กล่อง)นี้ก็คือ Summarysummarize ที่จะเก็บข้อมูลของตั๋วแต่ละใบไว้ในรูปแบบของ object ของ class ticket
+     * (เชื่อมต่อกับคลาสTicket , ConfirmBooking และ Ticket ticket = new Ticket)
+     * Create a List to store each ticket. List<Ticket> means a list of movie tickets (like a box) 
+     * and the name of List<Ticket>(box) is Summarysummarize which will store each ticket's information in the form of an object of class ticket.*/
+    HashSet<string> Seats = new HashSet<string>();
+    ////ใช้ชุดข้อมูลHashSet(ชุดของค่าที่ไม่ซ้ำกัน) ใช้เก็บที่นั่งที่จองไปแล้ว ใช้กับเมธอดGetSeatNumber
+    ///// Use HashSet(a set of unique values) to store the reserved seats. Use with GetSeatNumber method.
+    bool continueProgram = true;
+    //ประกาศตัวแปรชนิดข้อมูลboolที่ชื่อcontinueProgramมีเริ่มต้นเป็น true (วนใหม่เรื่อยๆ) จนกว่าจะเป็น false ก็ต่อเมื่อยกเลิกหรือออกโปรแกรม
+    //Declare a bool type variable named continueProgram that is initialized as true (repeating over and over again) until it becomes false only when the program is canceled or exited.
+    string[] movies = { "Teeyod", "Godzilla", "Titanic", "The Godfather", "Jurassic Park", "Forrest Gump", "Interstellar", "Avengers: Endgame", "Avatar", "The Matrix" };
+    string[] times = { "12:00 P.M", "15:00 P.M", "17:30 P.M", "18:00 P.M", "19:00 P.M", "20:00 P.M", "21:00 P.M" };
+    string[] date = { "Monday 25/11/2024", "Tuesday 26/11/2024" };
+
+    while (continueProgram)
+    // หน้าที่คือลูปจนกว่าผู้ใช้จะยกเลิกโปรแกรม (ซ้ำกว่าโปรแกรมจะเป็น false) (เชื่อมกับ ConfirmBooking)
+    // The function is to loop until the user cancels the program (until the program is false) (connect with ConfirmBooking)
+    {
+        Console.WriteLine("Welcome to Co-Prom Cinema\n"); // Show welcome
+        DisplayMovies(movies, date); //movies และ date ที่อยู่ในวงเล็บหลังชื่อฟังก์ชัน เรียกว่า อาร์กิวเมนต์ (arguments).
+        // แสดงหน้า method displaymain
+        //show DisplayMovies form method DisplayMovies
+
+        string selectedMoviesDate = SelectedMoviesDate(movies, date, out int scheduleChoice);
+        //out int scheduleChoice ใช้เพื่อส่งค่าหมายเลขหนังที่ผู้ใช้เลือก ออกจากฟังก์ชัน กลับมาใน Main() โดยที่ค่าของตัวแปรนี้ถูกกำหนดในฟังก์ชัน SelectedMoviesDate.
+        //ประกาศชื่อตัวแปรเป็นselectedMoviesDate ตัวแปรนี้จะเก็บข้อมูลจาก methods ของ SelectedMoviesDate
+        /*Declare a variable name as selectedMoviesDate. This variable will store data from the SelectedMoviesDate methods.
+         * out int scheduleChoice is used to return the movie number selected by the user, 
+         * exiting the function, and returning in Main() with the value of this variable set in the SelectedMoviesDate function.*/
+
+        string selectedTime = SelectedTime(times);
+        //ประกาศชื่อตัวแปรเป็นselectedTime ตัวแปรนี้จะเก็บข้อมูลจาก methods ของ SelectedTime
+        //Declare a variable name as selectedTime . This variable will store data from the SelectedTime methods.
+
+        int ticketCount = TicketCount();
+        //ประกาศชื่อตัวแปรเป็นticketCount ตัวแปรนี้จะเก็บข้อมูลจาก methods ของ TicketCount();
+        //Declare a variable name as ticketCount . This variable will store data from the TicketCount methods.
+
+        string selectedZone = SelectedZone(out int ticketPrice);
+        //ประกาศชื่อตัวแปรเป็นticketCount ตัวแปรนี้จะเก็บข้อมูลจาก methods ของ TicketCount();
+        //Declare a variable name as ticketCount . This variable will store data from the TicketCount methods.
+
+        for (int i = 0; i < ticketCount; i++)
+        //เงื่อนไข: วนซ้ำตราบใดที่ i ยังน้อยกว่า ticketCount (จำนวนตั๋วที่ผู้ใช้ต้องการซื้อ).
+        //Condition: Iterate as long as i is less than ticketCount(the number of tickets the user wants to buy).
